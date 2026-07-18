@@ -99,4 +99,33 @@ public static class OtpAuthUriParser
 
         return defaultValue;
     }
+
+    /// <summary>
+    /// Accountからotpauth URI文字列を生成する。
+    /// </summary>
+    public static string ToUriString(Account account)
+    {
+        if (account == null)
+        {
+            throw new ArgumentNullException(nameof(account));
+        }
+
+        // ラベル部分のエンコード。Issuerがある場合は "Issuer:AccountName"
+        var label = string.IsNullOrEmpty(account.Issuer)
+            ? Uri.EscapeDataString(account.AccountName)
+            : $"{Uri.EscapeDataString(account.Issuer)}:{Uri.EscapeDataString(account.AccountName)}";
+
+        var query = $"?secret={Uri.EscapeDataString(account.SecretBase32)}";
+
+        if (!string.IsNullOrEmpty(account.Issuer))
+        {
+            query += $"&issuer={Uri.EscapeDataString(account.Issuer)}";
+        }
+
+        query += $"&algorithm={Uri.EscapeDataString(account.Algorithm)}";
+        query += $"&digits={account.Digits}";
+        query += $"&period={account.PeriodSeconds}";
+
+        return $"otpauth://totp/{label}{query}";
+    }
 }

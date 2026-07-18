@@ -20,17 +20,27 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal">
+        <WrapPanel Grid.Row="0" Margin="0,0,0,0" VerticalAlignment="Center">
             <Button Content="画面スキャン(QRコード読み取り)"
                     Padding="12,6"
                     Command="{Binding ScanCommand}"
-                    IsEnabled="{Binding IsScanning, Converter={StaticResource InverseBoolConverter}}" />
-            <ProgressBar Width="20" Height="20" Margin="12,0,0,0"
-                         IsIndeterminate="True"
-                         Visibility="{Binding IsScanning, Converter={StaticResource BoolToVisibilityConverter}}" />
-        </StackPanel>
+                    IsEnabled="{Binding IsScanning, Converter={StaticResource InverseBoolConverter}}"
+                    Margin="0,0,8,4" />
+            <ProgressBar Width="20" Height="20" Margin="0,0,8,4"
+                          IsIndeterminate="True"
+                          VerticalAlignment="Center"
+                          Visibility="{Binding IsScanning, Converter={StaticResource BoolToVisibilityConverter}}" />
+            <Button Content="バックアップ書出"
+                    Padding="12,6"
+                    Command="{Binding ExportBackupCommand}"
+                    Margin="0,0,8,4" />
+            <Button Content="バックアップ読込"
+                    Padding="12,6"
+                    Command="{Binding ImportBackupCommand}"
+                    Margin="0,0,0,4" />
+        </WrapPanel>
 
-        <TextBlock Grid.Row="1" Margin="0,8,0,0"
+        <TextBlock Grid.Row="1" Margin="0,4,0,0"
                    Text="{Binding StatusMessage}"
                    Foreground="Gray" />
 
@@ -42,9 +52,10 @@
                                 CornerRadius="8"
                                 Padding="16"
                                 Margin="0,0,0,8">
-                            <Grid>
+                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
@@ -63,10 +74,17 @@
                                         VerticalAlignment="Center"
                                         Margin="16,0,0,0"
                                         Padding="10,6"
+                                        Command="{Binding ShowBackupCommand}"
+                                        Content="引き継ぎ" />
+
+                                <Button Grid.Column="2"
+                                        VerticalAlignment="Center"
+                                        Margin="8,0,0,0"
+                                        Padding="10,6"
                                         Command="{Binding CopyCommand}"
                                         Content="{Binding WasRecentlyCopied, Converter={StaticResource CopiedToLabelConverter}}" />
 
-                                <Button Grid.Column="2"
+                                <Button Grid.Column="3"
                                         VerticalAlignment="Center"
                                         Margin="8,0,0,0"
                                         Padding="10,6"

@@ -64,4 +64,14 @@ public partial class AccountViewModel : ObservableObject
         await Task.Delay(TimeSpan.FromSeconds(2));
         WasRecentlyCopied = false;
     }
+
+    [RelayCommand]
+    private void ShowBackup()
+    {
+        var window = new BackupWindow(Account)
+        {
+            Owner = Application.Current.MainWindow
+        };
+        window.ShowDialog();
+    }
 }

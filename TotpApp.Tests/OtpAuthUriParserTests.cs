@@ -106,4 +106,30 @@ public class OtpAuthUriParserTests
         Assert.IsTrue(success);
         Assert.AreEqual("JBSWY3DPEHPK3PXP", account!.SecretBase32);
     }
+
+    [TestMethod]
+    public void ToUriString_Roundtrip_WorksCorrectly()
+    {
+        var original = new Account
+        {
+            Issuer = "GitHub",
+            AccountName = "elf-engineer@example.com",
+            SecretBase32 = "JBSWY3DPEHPK3PXP",
+            Digits = 6,
+            PeriodSeconds = 30,
+            Algorithm = "SHA1"
+        };
+
+        var uri = OtpAuthUriParser.ToUriString(original);
+        var success = OtpAuthUriParser.TryParse(uri, out var parsed);
+
+        Assert.IsTrue(success);
+        Assert.IsNotNull(parsed);
+        Assert.AreEqual(original.Issuer, parsed!.Issuer);
+        Assert.AreEqual(original.AccountName, parsed.AccountName);
+        Assert.AreEqual(original.SecretBase32, parsed.SecretBase32);
+        Assert.AreEqual(original.Digits, parsed.Digits);
+        Assert.AreEqual(original.PeriodSeconds, parsed.PeriodSeconds);
+        Assert.AreEqual(original.Algorithm, parsed.Algorithm);
+    }
 }

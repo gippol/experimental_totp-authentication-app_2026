@@ -114,6 +114,89 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private async Task ExportBackupAsync()
+    {
+        if (Accounts.Count == 0)
+        {
+            MessageBox.Show("エクスポートするアカウントがありません。", "情報", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        var dialog = new Microsoft.Win32.SaveFileDialog
+        {
+            FileName = "totp_backup",
+            DefaultExt = ".txt",
+            Filter = "Text Documents (.txt)|*.txt|All Files (*.*)|*.*",
+            Title = "バックアップファイルの保存"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            try
+            {
+                var lines = Accounts.Select(a => OtpAuthUriParser.ToUriString(a.Account)).ToArray();
+                System.IO.File.WriteAllLines(dialog.FileName, lines, System.Text.Encoding.UTF8);
+                StatusMessage = "バックアップを保存しました。";
+                MessageBox.Show("バックアップのエクスポートが完了しました。", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"バックアップの書き出しに失敗しました: {ex.Message}", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+
+    [RelayCommand]
+    private async Task ImportBackupAsync()
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            DefaultExt = ".txt",
+            Filter = "Text Documents (.txt)|*.txt|All Files (*.*)|*.*",
+            Title = "バックアップファイルの読み込み"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            try
+            {
+                var lines = System.IO.File.ReadAllLines(dialog.FileName, System.Text.Encoding.UTF8);
+                int importedCount = 0;
+                int skippedCount = 0;
+
+                foreach (var line in lines)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    if (OtpAuthUriParser.TryParse(line, out var account) && account != null)
+                    {
+                        if (Accounts.Any(a => a.Account.SecretBase32 == account.SecretBase32))
+                        {
+                            skippedCount++;
+                            continue;
+                        }
+
+                        Accounts.Add(new AccountViewModel(account, _totpService));
+                        importedCount++;
+                    }
+                }
+
+                if (importedCount > 0)
+                {
+                    await _storageService.SaveAsync(Accounts.Select(a => a.Account).ToList());
+                }
+
+                StatusMessage = $"{importedCount} 件のアカウントを復元しました。(重複スキップ: {skippedCount} 件)";
+                MessageBox.Show($"バックアップの読み込みが完了しました。\n復元: {importedCount} 件\nスキップ: {skippedCount} 件", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"バックアップの読み込みに失敗しました: {ex.Message}", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+
     private void OnTimerTick()
     {
         var now = DateTime.UtcNow;
