@@ -1,0 +1,42 @@
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Re]leases/
+x64/
+x86/
+bin/
+obj/
+build/
+
+## Visual Studio cache & temporary files
+.vs/
+Generated%20Files/
+Ankh.diff
+*.abc
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+*.userosscache
+
+## Rider & VS Code
+.idea/
+.vscode/
+.vs/
+*.sln.iml
+
+## NuGet
+packages/
+*.nupkg
+*.nuget.props
+*.nuget.targets
+
+## OS-specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## Test
+TestResults/
+

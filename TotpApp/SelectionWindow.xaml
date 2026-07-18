@@ -1,0 +1,29 @@
+﻿<Window x:Class="TotpApp.SelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TotpApp"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#40000000"
+        Topmost="True"
+        WindowState="Maximized"
+        Title="SelectionWindow">
+    <Grid>
+        <Canvas x:Name="RootCanvas">
+			<TextBlock x:Name="CoordText"
+               Foreground="White"
+               Background="#80000000"
+               FontSize="14"
+               Padding="5"
+               Visibility="Collapsed"/>
+            <Rectangle x:Name="SelectionRect"
+                   Stroke="Red"
+                   StrokeThickness="2"
+                   Fill="#40FFFFFF"
+                   Visibility="Collapsed"/>
+        </Canvas>
+    </Grid>
+</Window>

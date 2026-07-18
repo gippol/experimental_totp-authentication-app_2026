@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>TotpApp</RootNamespace>
+    <AssemblyName>TotpApp</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- .NET Frameworkのフレームワークアセンブリ参照(NuGet不要) -->
+    <Reference Include="System.Web" />        <!-- HttpUtility.ParseQueryString用 -->
+    <Reference Include="System.Security" />   <!-- ProtectedData(DPAPI)用 -->
+    <Reference Include="System.Drawing" />    <!-- 画面キャプチャ(Bitmap)用 -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Otp.NET" Version="1.4.1" />
+    <PackageReference Include="System.Text.Json" Version="10.0.10" />
+    <PackageReference Include="ZXing.Net" Version="0.16.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- internalなロジック(SecureStorageServiceのシリアライズ処理など)をテストプロジェクトから見えるようにする -->
+    <InternalsVisibleTo Include="TotpApp.Tests" />
+  </ItemGroup>
+
+</Project>
